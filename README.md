@@ -10,6 +10,9 @@ Data Source: US Department of Transportation – Bureau of Transportation Statis
 
 Our outcome variable is ARR_DELAY, the difference in minutes between scheduled and actual arrival time.
 
+## Midterm Report Video (5 minutes)
+[Video Link](https://youtu.be/zwTngcYoQkM?feature=shared)
+
 ## Data Cleaning
 Filtering by Largest Airports: Flights were filtered to include only those originating from and landing at the 30 largest U.S. airports by passenger traffic. This focus on major airports enhances the relevance of the analysis.
 
