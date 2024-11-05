@@ -6,7 +6,7 @@ This predictive model can be used to improve operational efficiency, optimize re
 
 Data Source: US Department of Transportation – Bureau of Transportation Statistics, August 2019 - August 2023
 
-[https://www.kaggle.com/datasets/patrickzel/flight-delay-and-cancellation-dataset-2019-2023](url)
+[Data Link](https://www.kaggle.com/datasets/patrickzel/flight-delay-and-cancellation-dataset-2019-2023)
 
 Our outcome variable is ARR_DELAY, the difference in minutes between scheduled and actual arrival time.
 
