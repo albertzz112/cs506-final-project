@@ -1,4 +1,4 @@
-# CS506 Final Project Proposal
+# CS506 Final Project
 
 Predicting Flight Delays - 
 By accurately forecasting the delay duration of a flight, the goal is to help airlines, airports, and passengers better manage their schedules and minimize the impact of disruptions on travel plans. 
