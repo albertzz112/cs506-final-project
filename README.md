@@ -18,15 +18,13 @@ Filtering by Largest Airports: Flights were filtered to include only those origi
 
 Removing Canceled Flights: All canceled flights were excluded from the dataset, as they cannot be modeled in a flight delay context.
 
-Eliminating Extreme Delays: Flights with an arrival delay greater than 180 minutes (3 hours) were removed to prevent skewing the results with extreme outliers.
+Date Filtering: Flights from the year 2020 were excluded to avoid model bias and ensure a relevant dataset for analysis.
 
-Date Filtering: The flight date (FL_DATE) was converted to a datetime format, and flights from the years 2020 were excluded to avoid model bias and ensure a relevant dataset for analysis.
+Extracting Flight Month and Day: New columns were created to represent the flight month and day numerically, derived from the flight date. These features will facilitate seasonal and weekend analysis. 
 
-Extracting Flight Month: A new column was created to represent the flight month numerically, derived from the flight date. This feature will facilitate seasonal analysis.
+Extracting Route and Month Indicators: Historical data was used to generate a feature that represents the probability that the flight will be delayed or early for the respective month or route. These values ranged from -1 to 1 for the flight being likely to be early or delayed based on the specific route and month. 
 
-Security Delay Data Removal: Rows indicating delays due to security checks were filtered out unless the delay was recorded as zero or was missing. This step ensures that only relevant delays were analyzed.
-
-Dropping Unnecessary Columns: Irrelevant columns were removed to streamline the dataset and focus on key variables that contribute to understanding flight delays.
+Dropping Features: Irrelevant columns were removed to streamline the dataset and focus on key variables that contribute to understanding flight delays. Columns containing data that would allow the model to cheat were also dropped. 
 
 Handling Missing Values: Any rows with missing data were eliminated to maintain the integrity of the dataset.
 
@@ -47,26 +45,17 @@ It can be seen from the data that there are seasonal trends in delays, with a la
 
 ## Modeling Process
 
-Handeling Categorical Variables: Categorical variables in the feature set were transformed using one-hot encoding. This process converts categorical variables into a numerical format that the Random Forest model can interpret, allowing the model to learn from these variables effectively.
+Handling Categorical Variables: Categorical variables in the feature set were transformed using the CatBoost framework, which natively handles categorical features. The categorical columns (AIRLINE, ORIGIN, DEST) were explicitly marked and passed as categorical features during model training, eliminating the need for one-hot encoding.
 
 Train-Test Split: 80% Train 20% Test was used to train the model. 
 
-Model Initialization and Training: A Random Forest Regressor was initialized with 100 estimators and trained on the training data. 
+Model Initialization and Training: 
+A CatBoost Regressor was initialized with the following parameters:
+Iterations: 1000
+Depth: 6
+Learning Rate: 0.1
+Loss Function: Tweedie with variance power = 1.5
 
 ### Model Predictions and Evaluation:
 
-After training, the model made predictions on the test data. Evaluation metrics, specifically Mean Absolute Error (MAE) and R-squared (R²), were calculated to assess the model's performance. However, initial results indicated that the model struggled significantly with predicting higher arrival delays accurately.
-
-
-#### Insights and Model Refinement:
-Upon analyzing the model's performance, it became apparent that it was particularly poor at predicting high arrival delays (≥ 50 minutes). This realization prompted the decision to segment the dataset based on arrival delay values. The process involved:
-
-#### Data Subsetting:
-
-The original DataFrame was divided into two subsets: one for flights with arrival delays less than 50 minutes (df_below_50) and another for those with delays of 50 minutes or more (df_above_50). This segmentation aimed to address the discrepancies in model performance across different delay magnitudes.
-Separate Model Training:
-
-A function was defined to train and evaluate a Random Forest model on each of the subsets independently. This approach allowed for tailored training to better capture the characteristics of each delay segment.
-Evaluation of Segmented Models:
-
-The model for arrival delays below 50 minutes was evaluated and yielded significantly better results than the initial model, indicating improved performance in predicting lower delays. Conversely, the performance for the high-delay segment was less favorable, reflecting the inherent challenges in accurately predicting more extreme delay scenarios.
+After training, the model made predictions on the test data. Evaluation metrics, specifically Mean Absolute Error (MSE) and R-squared (R²), were calculated to assess the model's performance. However, initial results indicated that the model struggled significantly with predicting higher arrival delays accurately. 
