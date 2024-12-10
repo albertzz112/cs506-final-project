@@ -20,7 +20,7 @@ Removing Canceled Flights: All canceled flights were excluded from the dataset, 
 
 Eliminating Extreme Delays: Flights with an arrival delay greater than 180 minutes (3 hours) were removed to prevent skewing the results with extreme outliers.
 
-Date Filtering: The flight date (FL_DATE) was converted to a datetime format, and flights from the years 2020, 2022, and 2023 were excluded to avoid model bias and ensure a relevant dataset for analysis.
+Date Filtering: The flight date (FL_DATE) was converted to a datetime format, and flights from the years 2020 were excluded to avoid model bias and ensure a relevant dataset for analysis.
 
 Extracting Flight Month: A new column was created to represent the flight month numerically, derived from the flight date. This feature will facilitate seasonal analysis.
 
