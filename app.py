@@ -95,20 +95,58 @@ def train_model():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Initialize the CatBoostRegressor model
-    model = CatBoostRegressor(iterations=1000, depth=6, learning_rate=0.1, loss_function='Tweedie:variance_power=1.5', verbose=200)
+    model = CatBoostRegressor(
+        iterations=1000,
+        depth=6,
+        learning_rate=0.1,
+        loss_function='RMSE',
+        verbose=200
+    )
 
     # Indices of categorical features
     cat_feature_indices = [X.columns.get_loc(col) for col in categorical_columns]
 
     # Train the model
-    model.fit(X_train, y_train, eval_set=(X_test, y_test), use_best_model=True, cat_features=cat_feature_indices)
+    model.fit(
+        X_train,
+        y_train,
+        eval_set=(X_test, y_test),
+        use_best_model=True,
+        cat_features=cat_feature_indices
+    )
 
-    # Make predictions and calculate MSE
+    # Extract evaluation metrics
+    eval_results = model.evals_result_
+
+    # Prepare data for visualization
+    iterations = list(range(len(eval_results['validation']['RMSE'])))
+    train_rmse = eval_results['learn']['RMSE']
+    val_rmse = eval_results['validation']['RMSE']
+
+    # Create training metrics plot
+    training_plot = create_training_plot(iterations, train_rmse, val_rmse)
+
+    # Final metrics
     y_pred = model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
     rmse = mse ** 0.5
 
-    return jsonify({'rmse': rmse, 'mse': mse})
+    return jsonify({'rmse': rmse, 'mse': mse, 'training_plot': training_plot})
+
+
+def create_training_plot(iterations, train_rmse, val_rmse):
+    """Creates a Plotly visualization for training and validation RMSE."""
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=iterations, y=train_rmse, mode='lines', name='Train RMSE'))
+    fig.add_trace(go.Scatter(x=iterations, y=val_rmse, mode='lines', name='Validation RMSE'))
+    fig.update_layout(
+        title="Training and Validation RMSE Over Iterations",
+        xaxis_title="Iterations",
+        yaxis_title="RMSE",
+        template="plotly_dark"
+    )
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
