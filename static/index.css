@@ -12,6 +12,10 @@ body {
   font-family: "Jersey 10";
 }
 
+h1 {
+        margin-bottom: 3px;
+}
+
 h2 {
   margin-top: 3rem;
   margin-bottom: 0rem;
