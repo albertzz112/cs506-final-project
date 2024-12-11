@@ -13,6 +13,16 @@ Our outcome variable is ARR_DELAY, the difference in minutes between scheduled a
 ## Midterm Report Video (5 minutes)
 [Video Link](https://youtu.be/zwTngcYoQkM?feature=shared)
 
+
+## Setup
+
+- Clone or Download the Repository
+- Once setup locally, in the terminal, type "make" or "make install" to install dependencies
+- After dependencies are installed, in the terminal once more type "make run" to start the Flask server
+- Once the server is running, navigate to the address provided in the terminal (e.g., http://127.0.0.1:3000) using your web browser.
+- You can now interact with the site and its features, including visualizations and model training.
+- ***NOTE**: it can take upwards of 2-3 minutes to train the model!* 
+
 ## Data Cleaning
 Filtering by Largest Airports: Flights were filtered to include only those originating from and landing at the 30 largest U.S. airports by passenger traffic. This focus on major airports enhances the relevance of the analysis.
 
