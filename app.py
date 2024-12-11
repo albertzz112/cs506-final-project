@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 import plotly
 import json
-import numpy as np
 
 app = Flask(__name__)
 
@@ -131,7 +130,19 @@ def train_model():
     mse = mean_squared_error(y_test, y_pred)
     rmse = mse ** 0.5
 
-    return jsonify({'rmse': rmse, 'mse': mse, 'training_plot': training_plot})
+    # Create feature importance plot
+    feature_importance_plot = create_feature_importance_plot(model, X)
+
+    # Create actual vs predicted plot
+    actual_vs_predicted_plot = create_actual_vs_predicted_plot(y_test, y_pred)
+
+    return jsonify({
+        'rmse': rmse,
+        'mse': mse,
+        'training_plot': training_plot,
+        'feature_importance_plot': feature_importance_plot,
+        'actual_vs_predicted_plot': actual_vs_predicted_plot
+    })
 
 
 def create_training_plot(iterations, train_rmse, val_rmse):
@@ -147,6 +158,18 @@ def create_training_plot(iterations, train_rmse, val_rmse):
     )
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
+def create_feature_importance_plot(model, X):
+    """Creates a feature importance plot."""
+    feature_importances = model.get_feature_importance()
+    fig = px.bar(x=X.columns, y=feature_importances, labels={'x': 'Feature', 'y': 'Importance'}, title="Feature Importance")
+    fig.update_layout(template="plotly_dark")
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+def create_actual_vs_predicted_plot(y_test, y_pred):
+    """Creates a scatter plot for actual vs predicted values."""
+    fig = px.scatter(x=y_test, y=y_pred, labels={'x': 'Actual Delay', 'y': 'Predicted Delay'})
+    fig.update_layout(title="Actual vs Predicted Arrival Delays", template="plotly_dark")
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 if __name__ == '__main__':
     app.run(debug=True)
