@@ -38,20 +38,20 @@ Handling Missing Values: Any rows with missing data were eliminated to maintain 
 ## Data Visualization
 
 Variables in our final dataset:
-Airline (String & Categorical)
-Origin (String & Categorical)
-Destination (String & Categorical)
-CRS Elapsed Time (Float & Numerical)
-Air Time (Float & Numerical)
-Distance (Float & Numerical)
-Monthly Indicator (Float & Numerical)
-Route Indicator (Float & Numerical)
-Month (Int & Numerical)
-Day of the Week as 0-6 (Int)
-Departure Hour (Int)
+- Airline (String & Categorical)
+- Origin (String & Categorical)
+- Destination (String & Categorical)
+- CRS Elapsed Time (Float & Numerical)
+- Air Time (Float & Numerical)
+- Distance (Float & Numerical)
+- Monthly Indicator (Float & Numerical)
+ -Route Indicator (Float & Numerical)
+- Month (Int & Numerical)
+- Day of the Week as 0-6 (Int)
+- Departure Hour (Int)
 
 Target Variable:
-Arr Delay (Int)
+- Arr Delay (Int)
 
 Number of rows: 823,633
 
