@@ -1,6 +1,23 @@
-html {
+body {
   width: 90%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-items: center;
+  align-items: center;
+  background-color: black;
+  color: white;
+  margin: auto;
+
+  font-family: "Jersey 10";
+}
+
+.visualizations {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.left-chart,
+.right-chart {
+  flex: 0 0 30%;
 }

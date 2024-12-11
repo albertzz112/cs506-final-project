@@ -9,6 +9,12 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='index.css') }}"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
@@ -21,20 +27,24 @@
     <div>{{ dataset_head | safe }}</div>
 
     <h2>Visualizations</h2>
-    <h3>Distribution of Arrival Delays</h3>
-    <div id="delay_dist_plot"></div>
-    <script>
-      var delayDistData = {{ delay_dist_plot | safe }};
-      Plotly.newPlot('delay_dist_plot', delayDistData.data, delayDistData.layout);
-    </script>
-
-    <h3>Monthly Average Flight Delays</h3>
-    <div id="monthly_delay_plot"></div>
-    <script>
-      var monthlyDelayData = {{ monthly_delay_plot | safe }};
-      Plotly.newPlot('monthly_delay_plot', monthlyDelayData.data, monthlyDelayData.layout);
-    </script>
-
+    <div class="visualizations">
+      <div class="left-chart">
+        <h3>Distribution of Arrival Delays</h3>
+        <div id="delay_dist_plot"></div>
+        <script>
+          var delayDistData = {{ delay_dist_plot | safe }};
+          Plotly.newPlot('delay_dist_plot', delayDistData.data, delayDistData.layout);
+        </script>
+      </div>
+      <div class="right-chart">
+        <h3>Monthly Average Flight Delays</h3>
+        <div id="monthly_delay_plot"></div>
+        <script>
+          var monthlyDelayData = {{ monthly_delay_plot | safe }};
+          Plotly.newPlot('monthly_delay_plot', monthlyDelayData.data, monthlyDelayData.layout);
+        </script>
+      </div>
+    </div>
     <h2>Data Cleaning & Processing</h2>
     <p>
       Data was cleaned by converting categorical features to 'category' dtype
