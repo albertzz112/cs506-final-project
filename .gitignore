@@ -3,3 +3,4 @@
 .python-version
 __pycache__
 data/flight_data_15+.csv
+catboost_info/
