@@ -1,61 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flight Delay Prediction Model</title>
     <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.14.0"></script>
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='index.css') }}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <h1>Flight Delay Prediction Model</h1>
 
     <h2>Dataset Description</h2>
     <p>{{ description }}</p>
 
     <h3>Dataset Head</h3>
-    <div>
-        {{ dataset_head | safe }}
-    </div>
+    <div>{{ dataset_head | safe }}</div>
 
     <h2>Visualizations</h2>
     <h3>Distribution of Arrival Delays</h3>
     <label for="airline-select">Select Airline:</label>
     <select id="airline-select">
-        <option value="">All Airlines</option>
-        {% for airline in airlines %}
-        <option value="{{ airline }}">{{ airline }}</option>
-        {% endfor %}
+      <option value="">All Airlines</option>
+      {% for airline in airlines %}
+      <option value="{{ airline }}">{{ airline }}</option>
+      {% endfor %}
     </select>
     <div id="delay_dist_plot"></div>
     <script>
-        let delayDistData = {{ delay_dist_plot | safe }};
-        Plotly.newPlot('delay_dist_plot', delayDistData.data, delayDistData.layout);
+      let delayDistData = {{ delay_dist_plot | safe }};
+      Plotly.newPlot('delay_dist_plot', delayDistData.data, delayDistData.layout);
 
-        document.getElementById('airline-select').addEventListener('change', function () {
-            const selectedAirline = this.value;
-            fetch('/get_airline_plot', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ airline: selectedAirline })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    Plotly.newPlot('delay_dist_plot', data.data, data.layout);
-                }
-            });
-        });
+      document.getElementById('airline-select').addEventListener('change', function () {
+          const selectedAirline = this.value;
+          fetch('/get_airline_plot', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ airline: selectedAirline })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.error) {
+                  alert(data.error);
+              } else {
+                  Plotly.newPlot('delay_dist_plot', data.data, data.layout);
+              }
+          });
+      });
     </script>
 
     <h3>Monthly Average Flight Delays</h3>
     <div id="monthly_delay_plot"></div>
     <script>
-        var monthlyDelayData = {{ monthly_delay_plot | safe }};
-        Plotly.newPlot('monthly_delay_plot', monthlyDelayData.data, monthlyDelayData.layout);
+      var monthlyDelayData = {{ monthly_delay_plot | safe }};
+      Plotly.newPlot('monthly_delay_plot', monthlyDelayData.data, monthlyDelayData.layout);
     </script>
 
     <h2>Train the Model</h2>
@@ -64,14 +72,19 @@
     <div id="model_output"></div>
 
     <script>
-        document.getElementById('train_model_button').addEventListener('click', function () {
-            fetch('/train_model', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('model_output').innerHTML = 'Training complete! RMSE: ' + data.rmse.toFixed(4) + ' | MSE: ' + data.mse.toFixed(4);
-                });
+      document
+        .getElementById("train_model_button")
+        .addEventListener("click", function () {
+          fetch("/train_model", { method: "POST" })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("model_output").innerHTML =
+                "Training complete! RMSE: " +
+                data.rmse.toFixed(4) +
+                " | MSE: " +
+                data.mse.toFixed(4);
+            });
         });
     </script>
-
-</body>
+  </body>
 </html>
