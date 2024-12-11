@@ -59,6 +59,24 @@
         });
     </script>
 
+    <h3>Training Metrics</h3>
+    <div id="training_plot"></div>
+    <script>
+        document.getElementById('train_model_button').addEventListener('click', function () {
+            fetch('/train_model', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('model_output').innerHTML =
+                        'Training complete! RMSE: ' + data.rmse.toFixed(4) + ' | MSE: ' + data.mse.toFixed(4);
+
+                    // Render training plot
+                    var trainingPlotData = JSON.parse(data.training_plot);
+                    Plotly.newPlot('training_plot', trainingPlotData.data, trainingPlotData.layout);
+                });
+        });
+    </script>
+
+
 </body>
 
 </html>
