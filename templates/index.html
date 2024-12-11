@@ -19,11 +19,25 @@
   <body>
     <h1>Flight Delay Prediction Model</h1>
 
-    <h2>Dataset Description</h2>
-    <p>{{ description }}</p>
+    <h3>Our Approach</h3>
+    <p>
+      This project focuses on predicting flight delays using Boosting as our machine learning model, specifically from the CatBoost Regressor library. The model leverages historical flight data, incorporating categorical features such as airline, origin, and destination, to provide accurate delay predictions. This can help airlines, airports, and passengers better manage schedules, optimize resources, and enhance customer satisfaction.
+    </p>
+
+    <h3>Data Description</h3>
+    <p>
+      The dataset comes from the US Department of Transportation – Bureau of Transportation Statistics (August 2019 - August 2023). It contains flight data from major U.S. airports, with the key variable being arrival delay (ARR_DELAY), which measures the difference in minutes between the scheduled and actual arrival times. The dataset was cleaned and processed to focus on flights from the 30 largest U.S. airports, excluding canceled flights, and data from 2022-23 to to avoid the model cheating (learning useless shortcuts).
+    </p>
+
+    <h3>Data Acquisition, Processing, and Cleaning</h3>
+    <p>
+      The dataset was filtered to include only flights from the 30 largest U.S. airports by passenger traffic. We also removed canceled flights and filtered out data from 2020 to avoid model bias. Additional features were derived, such as month and day indicators, and route-specific delay probabilities. Irrelevant features were dropped, and missing values were handled to maintain dataset integrity. Irrelevant features or those that would allow the model to cheat were dropped. 
+    </p>
 
     <h3>Dataset Head</h3>
     <div>{{ dataset_head | safe }}</div>
+
+
 
     <h2>Visualizations</h2>
     <h3>Distribution of Arrival Delays</h3>
@@ -42,14 +56,13 @@
       document.getElementById('airline-select').addEventListener('change', function () {
           const selectedAirline = this.value;
 
-          // If "All Airlines" is selected, pass null to the backend
           if (selectedAirline === "") {
               fetch('/get_airline_plot', {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json'
                   },
-                  body: JSON.stringify({ airline: null }) // or send an empty string ""
+                  body: JSON.stringify({ airline: null })
               })
               .then(response => response.json())
               .then(data => {
@@ -86,7 +99,12 @@
       Plotly.newPlot('monthly_delay_plot', monthlyDelayData.data, monthlyDelayData.layout);
     </script>
 
-    <h2>Train the Model</h2>
+    <h3>Data Science Process</h3>
+    <p>
+      The project followed a typical data science pipeline, involving data acquisition, preprocessing, modeling, and evaluation. Challenges during data processing included leakage identification which was done using a correlation heatmap of different variables to allow for a visualization of which variables might allow for the model to cheat. Different visualizations of the data were used to help decide which features can be engineered or used for the model, including representations of flight delay distributions, average delay by month, average delays by airline, and average delay by origin and destination. These allowed us to engineer useful features such as a route delay indicator and month delay indicator that can give the model useful information on how a month or route might typically affect delays based on historical trends. When building the model, many libraries were unable to handle categorical variables, which was solved by using the CatBoost library which can handle categorical variables natively. Finally, the model uses a 80/20 train test split, with the parameters of the model having 1000 iterations, 0.1 learning rate, and max tree depth of 6. This is typical of a boosting algorithm since boosting relies on building small but specialized decision trees and aggregating their results by crunching the guesses and adding it to the model. Overall, this approach proved effective by resulting in a lower MSE than when using Random Forest. 
+    </p>
+
+    <h2>Model Training (may take a few minutes)</h2>
     <button id="train_model_button">Train Model</button>
     <h3>Model Training Status</h3>
     <div id="model_output"></div>
