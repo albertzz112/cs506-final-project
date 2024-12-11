@@ -57,13 +57,19 @@ def create_delay_distribution_plot():
 @app.route('/get_airline_plot', methods=['POST'])
 def get_airline_plot():
     airline = request.json.get('airline')
-    filtered_data = data[data['AIRLINE'] == airline]
-    
-    if filtered_data.empty:
-        return jsonify({'error': 'No data available for the selected airline.'}), 400
 
-    fig = px.histogram(filtered_data, x='ARR_DELAY', nbins=50, 
-                       title=f"Distribution of Arrival Delays for {airline}")
+    if airline:
+        # Filter data for the selected airline
+        filtered_data = data[data['AIRLINE'] == airline]
+        if filtered_data.empty:
+            return jsonify({'error': 'No data available for the selected airline.'}), 400
+        title = f"Distribution of Arrival Delays for {airline}"
+    else:
+        # Use all airlines if no specific airline is selected
+        filtered_data = data
+        title = "Distribution of Arrival Delays for All Airlines"
+    
+    fig = px.histogram(filtered_data, x='ARR_DELAY', nbins=50, title=title)
     fig.update_layout(
         xaxis_title="Arrival Delay (minutes)",
         yaxis_title="Frequency",

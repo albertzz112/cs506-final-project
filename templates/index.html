@@ -41,21 +41,41 @@
 
       document.getElementById('airline-select').addEventListener('change', function () {
           const selectedAirline = this.value;
-          fetch('/get_airline_plot', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ airline: selectedAirline })
-          })
-          .then(response => response.json())
-          .then(data => {
-              if (data.error) {
-                  alert(data.error);
-              } else {
-                  Plotly.newPlot('delay_dist_plot', data.data, data.layout);
-              }
-          });
+          
+          // If "All Airlines" is selected, pass null to the backend
+          if (selectedAirline === "") {
+              fetch('/get_airline_plot', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ airline: null }) // or send an empty string ""
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.error) {
+                      alert(data.error);
+                  } else {
+                      Plotly.newPlot('delay_dist_plot', data.data, data.layout);
+                  }
+              });
+          } else {
+              fetch('/get_airline_plot', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ airline: selectedAirline })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.error) {
+                      alert(data.error);
+                  } else {
+                      Plotly.newPlot('delay_dist_plot', data.data, data.layout);
+                  }
+              });
+          }
       });
     </script>
 
