@@ -12,7 +12,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Load dataset
-data = pd.read_csv('data/flight_data_15+.csv')
+data = pd.read_csv('data/data.csv')
 
 # Convert categorical columns
 categorical_columns = ['AIRLINE', 'ORIGIN', 'DEST']
@@ -33,15 +33,37 @@ def home():
     delay_dist_plot = create_delay_distribution_plot()
     monthly_delay_plot = create_monthly_delay_plot()
 
+    # Extract unique airlines
+    airlines = data['AIRLINE'].cat.categories.tolist()
+
     return render_template('index.html', 
                            description=dataset_description, 
                            dataset_head=dataset_head.to_html(classes='table table-bordered'),
                            delay_dist_plot=delay_dist_plot,
-                           monthly_delay_plot=monthly_delay_plot)
+                           monthly_delay_plot=monthly_delay_plot,
+                           airlines=airlines)
 
 # Create delay distribution plot
 def create_delay_distribution_plot():
-    fig = px.histogram(data, x='ARR_DELAY', nbins=30, title="Distribution of Arrival Delays")
+    fig = px.histogram(data, x='ARR_DELAY', nbins=70, title="Distribution of Arrival Delays")
+    fig.update_layout(
+        xaxis_title="Arrival Delay (minutes)",
+        yaxis_title="Frequency",
+        template="plotly_dark"
+    )
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+# Create airline-specific delay distribution plot
+@app.route('/get_airline_plot', methods=['POST'])
+def get_airline_plot():
+    airline = request.json.get('airline')
+    filtered_data = data[data['AIRLINE'] == airline]
+    
+    if filtered_data.empty:
+        return jsonify({'error': 'No data available for the selected airline.'}), 400
+
+    fig = px.histogram(filtered_data, x='ARR_DELAY', nbins=30, 
+                       title=f"Distribution of Arrival Delays for {airline}")
     fig.update_layout(
         xaxis_title="Arrival Delay (minutes)",
         yaxis_title="Frequency",
@@ -67,57 +89,20 @@ def train_model():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Initialize the CatBoostRegressor model
-    model = CatBoostRegressor(
-        iterations=1000,
-        depth=6,
-        learning_rate=0.1,
-        loss_function='RMSE',
-        verbose=200
-    )
+    model = CatBoostRegressor(iterations=1000, depth=6, learning_rate=0.1, loss_function='Tweedie:variance_power=1.5', verbose=200)
 
     # Indices of categorical features
     cat_feature_indices = [X.columns.get_loc(col) for col in categorical_columns]
 
     # Train the model
-    model.fit(
-        X_train,
-        y_train,
-        eval_set=(X_test, y_test),
-        use_best_model=True,
-        cat_features=cat_feature_indices
-    )
+    model.fit(X_train, y_train, eval_set=(X_test, y_test), use_best_model=True, cat_features=cat_feature_indices)
 
-    # Extract evaluation metrics
-    eval_results = model.evals_result_
-
-    # Prepare data for visualization
-    iterations = list(range(len(eval_results['validation']['RMSE'])))
-    train_rmse = eval_results['learn']['RMSE']
-    val_rmse = eval_results['validation']['RMSE']
-
-    # Create training metrics plot
-    training_plot = create_training_plot(iterations, train_rmse, val_rmse)
-
-    # Final metrics
+    # Make predictions and calculate MSE
     y_pred = model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
     rmse = mse ** 0.5
 
-    return jsonify({'rmse': rmse, 'mse': mse, 'training_plot': training_plot})
-
-
-def create_training_plot(iterations, train_rmse, val_rmse):
-    """Creates a Plotly visualization for training and validation RMSE."""
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=iterations, y=train_rmse, mode='lines', name='Train RMSE'))
-    fig.add_trace(go.Scatter(x=iterations, y=val_rmse, mode='lines', name='Validation RMSE'))
-    fig.update_layout(
-        title="Training and Validation RMSE Over Iterations",
-        xaxis_title="Iterations",
-        yaxis_title="RMSE",
-        template="plotly_dark"
-    )
-    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return jsonify({'rmse': rmse, 'mse': mse})
 
 if __name__ == '__main__':
     app.run(debug=True)
