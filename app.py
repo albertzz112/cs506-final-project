@@ -45,7 +45,7 @@ def home():
 
 # Create delay distribution plot
 def create_delay_distribution_plot():
-    fig = px.histogram(data, x='ARR_DELAY', nbins=70, title="Distribution of Arrival Delays")
+    fig = px.histogram(data, x='ARR_DELAY', nbins=50, title="Distribution of Arrival Delays")
     fig.update_layout(
         xaxis_title="Arrival Delay (minutes)",
         yaxis_title="Frequency",
@@ -62,7 +62,7 @@ def get_airline_plot():
     if filtered_data.empty:
         return jsonify({'error': 'No data available for the selected airline.'}), 400
 
-    fig = px.histogram(filtered_data, x='ARR_DELAY', nbins=30, 
+    fig = px.histogram(filtered_data, x='ARR_DELAY', nbins=50, 
                        title=f"Distribution of Arrival Delays for {airline}")
     fig.update_layout(
         xaxis_title="Arrival Delay (minutes)",
