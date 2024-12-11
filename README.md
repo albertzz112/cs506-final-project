@@ -69,3 +69,21 @@ Loss Function: Tweedie with variance power = 1.5
 ### Model Predictions and Evaluation:
 
 After training, the model made predictions on the test data. Evaluation metrics, specifically Mean Absolute Error (MSE) and R-squared (R²), were calculated to assess the model's performance. However, initial results indicated that the model struggled significantly with predicting higher arrival delays accurately. 
+
+## Progress Since Midterm
+
+Since the midterm, significant progress has been made:  
+- The predictive model was trained and integrated into the Flask web application.  
+- Several interactive visualizations, such as delay distributions and monthly trends, have been implemented to provide insights into the data.  
+- Model performance is evaluated using RMSE and MSE metrics to assess its accuracy and reliability.
+- Shifted from random forest to now use boosting
+
+Further potential improvements include fine-tuning the boosting model and enhancing visualizations to provide more detailed insights into delay trends.
+
+## Overall Results and Conclusion
+The final model, leveraging a **boosting algorithm**, demonstrates promising results in predicting flight delays:  
+- **Performance Metrics:** (around) RMSE of 37 and MSE of 1369.  
+- **Feature Importance:** Key factors influencing delays, such as airline and origin, were identified through the model's feature importance analysis.  
+- **Usability:** The interactive visualizations and model predictions suggest its applicability for operational decision-making and enhancing travel planning.  
+
+This approach provides a foundation for future work, including model optimization and expanding features for even greater predictive accuracy.
