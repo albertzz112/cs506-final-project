@@ -37,6 +37,24 @@ Handling Missing Values: Any rows with missing data were eliminated to maintain 
 
 ## Data Visualization
 
+Variables in our final dataset:
+Airline (String & Categorical)
+Origin (String & Categorical)
+Destination (String & Categorical)
+CRS Elapsed Time (Float & Numerical)
+Air Time (Float & Numerical)
+Distance (Float & Numerical)
+Monthly Indicator (Float & Numerical)
+Route Indicator (Float & Numerical)
+Month (Int & Numerical)
+Day of the Week as 0-6 (Int)
+Departure Hour (Int)
+
+Target Variable:
+Arr Delay (Int)
+
+Number of rows: 823,633
+
 ![image](https://github.com/user-attachments/assets/e99151c9-407e-487f-98a3-256b1396cd9b)
 
 It can be seen from the data that there is a large portion of the data centered around 0 with a long tail going towards high delays. This could prove issues later on if the model tries to consistently predict a low delay and fail to predict high delays. 
