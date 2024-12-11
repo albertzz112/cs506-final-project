@@ -10,10 +10,6 @@ Data Source: US Department of Transportation – Bureau of Transportation Statis
 
 Our outcome variable is ARR_DELAY, the difference in minutes between scheduled and actual arrival time.
 
-## Midterm Report Video (5 minutes)
-[Video Link](https://youtu.be/zwTngcYoQkM?feature=shared)
-
-
 ## Setup
 
 - Clone or Download the Repository
@@ -28,7 +24,7 @@ Filtering by Largest Airports: Flights were filtered to include only those origi
 
 Removing Canceled Flights: All canceled flights were excluded from the dataset, as they cannot be modeled in a flight delay context.
 
-Date Filtering: Flights from the year 2020 were excluded to avoid model bias and ensure a relevant dataset for analysis.
+Date Filtering: Flights from the year 2023 were excluded to avoid model bias and cheating.
 
 Extracting Flight Month and Day: New columns were created to represent the flight month and day numerically, derived from the flight date. These features will facilitate seasonal and weekend analysis. 
 
@@ -75,14 +71,14 @@ After training, the model made predictions on the test data. Evaluation metrics,
 Since the midterm, significant progress has been made:  
 - The predictive model was trained and integrated into the Flask web application.  
 - Several interactive visualizations, such as delay distributions and monthly trends, have been implemented to provide insights into the data.  
-- Model performance is evaluated using RMSE and MSE metrics to assess its accuracy and reliability.
-- Shifted from random forest to now use boosting
+- Model performance evaluated using RMSE and MSE metrics have shown better results.
+- Shifted from random forest to now use boosting. 
 
 Further potential improvements include fine-tuning the boosting model and enhancing visualizations to provide more detailed insights into delay trends.
 
 ## Overall Results and Conclusion
 The final model, leveraging a **boosting algorithm**, demonstrates promising results in predicting flight delays:  
-- **Performance Metrics:** (around) RMSE of 37 and MSE of 1369.  
+- **Performance Metrics:** (around) RMSE of around 37 and MSE of around 1369.  
 - **Feature Importance:** Key factors influencing delays, such as airline and origin, were identified through the model's feature importance analysis.  
 - **Usability:** The interactive visualizations and model predictions suggest its applicability for operational decision-making and enhancing travel planning.  
 
